@@ -1,14 +1,12 @@
-import os 
 import os
 from pathlib import Path
 import logging
-# This file creates the required files in the project directory.
-# Note: you need to make exception.py and logger.py in the root directory yourself before running this file(template.py)
 
-logging.basicConfig("templates.log", level=logging.INFO)
+# Configure logging
+logging.basicConfig(filename="templates.log", level=logging.INFO, format="%(asctime)s - %(message)s")
 
-
-root_directory_files =[
+# Root directory files
+root_directory_files = [
     ".gitignore",
     "README.md",
     "requirements.txt",
@@ -16,10 +14,11 @@ root_directory_files =[
     "Dockerfile",
     "common/__init__.py",
     "execute_train_pipeline.py",
-    "execute_prediction_pipeline.py"]
+    "execute_prediction_pipeline.py",
+]
 
+# Training pipeline files
 training_pipeline_files = [
-    
     "training/configuration_manager/__init__.py",
     "training/configuration_manager/configuration.py",
     "training/config/config.yaml",
@@ -40,16 +39,17 @@ training_pipeline_files = [
     "training/pipeline/04_feature_extraction.py",
     "training/pipeline/05_feature_engineering.py",
     "training/pipeline/06_model_trainer.py",
-    "training/pipeline/07_model_evaluation.py"
+    "training/pipeline/07_model_evaluation.py",
     "training/entity/__init__.py",
     "training/entity/config_entity.py",
     "training/utils/__init__.py",
     "training/utils/common.py",
     "training/constants/__init__.py",
-    "training/__init__.py"
+    "training/__init__.py",
 ]
 
-deployment_pipeline_files =[
+# Deployment pipeline files
+deployment_pipeline_files = [
     "deployment/app.py",
     "deployment/templates/index.html",
     "deployment/templates/train_evaluate.html",
@@ -59,7 +59,7 @@ deployment_pipeline_files =[
     "deployment/config/config.yaml",
     "deployment/config/params.yaml",
     "deployment/config/schema.yaml",
-    "deployment/componenets/__init__.py",
+    "deployment/components/__init__.py",
     "deployment/components/data_ingestion.py",
     "deployment/components/data_validation.py",
     "deployment/components/image_processing.py",
@@ -80,22 +80,23 @@ deployment_pipeline_files =[
     "deployment/utils/__init__.py",
     "deployment/utils/common.py",
     "deployment/constants/__init__.py",
-    "deployment/__init__.py"
+    "deployment/__init__.py",
 ]
 
-for list_of_files in [root_directory_files,training_pipeline_files,deployment_pipeline_files]:
+# Combine all file lists and create files
+for list_of_files in [root_directory_files, training_pipeline_files, deployment_pipeline_files]:
     for filepath in list_of_files:
         filepath = Path(filepath)
         filedir, filename = os.path.split(filepath)
 
-        if filedir !="":
-            os.makedirs(filedir,exist_ok=True)
-            logging.info(f"Creating directory; {filedir} for the file: {filename}")
+        # Create directories if they don't exist
+        if filedir:
+            os.makedirs(filedir, exist_ok=True)
+            logging.info(f"Created directory: {filedir} for the file: {filename}")
 
-        if (not os.path.exists(filepath)) or (os.path.getsize(filepath)==0):
-            with open(filepath,"w") as f:
-                pass
-                logging.info(f"Creating empty file: {filepath}")
-
+        # Create the file if it doesn't exist or is empty
+        if not filepath.exists() or filepath.stat().st_size == 0:
+            filepath.touch()
+            logging.info(f"Created empty file: {filepath}")
         else:
-            logging.info(f"{filename} already exists")
+            logging.info(f"File already exists: {filepath}")
